@@ -4,7 +4,6 @@ A static page for testing camera access inside iOS and Android webviews. It's ho
 
 It tests:
 - `getUserMedia` live stream (front and back cameras) and capturing a frame
-- `<input type="file" capture>` native camera pickers (photo and video)
 - `enumerateDevices` and the Permissions API
 - Environment details: secure context, whether it's in an iframe, the user agent
 

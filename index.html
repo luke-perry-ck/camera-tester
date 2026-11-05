@@ -13,16 +13,15 @@
   h1 { font-size:20px; margin:0 0 12px; }
   h2 { font-size:16px; margin:0 0 8px; }
   section { background:var(--card); border-radius:10px; padding:12px; margin-bottom:12px; }
-  button, label.btn { display:inline-block; background:var(--accent); color:#fff; border:0; border-radius:8px; padding:10px 14px;
+  button { display:inline-block; background:var(--accent); color:#fff; border:0; border-radius:8px; padding:10px 14px;
            font-size:15px; margin:4px 4px 4px 0; cursor:pointer; }
   button.secondary { background:#6b7280; }
-  video, img, canvas { width:100%; max-height:50vh; object-fit:contain; background:#000; border-radius:8px; display:block; margin-top:8px; }
+  video, canvas { width:100%; max-height:50vh; object-fit:contain; background:#000; border-radius:8px; display:block; margin-top:8px; }
   table { width:100%; border-collapse:collapse; font-size:13px; }
   td { padding:3px 4px; vertical-align:top; word-break:break-all; }
   td:first-child { color:var(--muted); white-space:nowrap; word-break:normal; width:1%; }
   .ok { color:var(--ok); } .err { color:var(--err); }
   #log { font:12px/1.4 ui-monospace, Menlo, monospace; white-space:pre-wrap; max-height:240px; overflow:auto; margin:0; }
-  input[type=file] { display:none; }
 </style>
 </head>
 <body>
@@ -44,17 +43,7 @@
 </section>
 
 <section>
-  <h2>2. File input (native camera picker)</h2>
-  <label class="btn">capture=environment<input type="file" accept="image/*" capture="environment" data-name="capture=environment"></label>
-  <label class="btn">capture=user<input type="file" accept="image/*" capture="user" data-name="capture=user"></label>
-  <label class="btn">accept=image/* (no capture)<input type="file" accept="image/*" data-name="no capture"></label>
-  <label class="btn">video capture<input type="file" accept="video/*" capture="environment" data-name="video"></label>
-  <img id="filePreview" hidden alt="">
-  <video id="filePreviewVideo" controls playsinline hidden></video>
-</section>
-
-<section>
-  <h2>3. Devices &amp; permissions</h2>
+  <h2>2. Devices &amp; permissions</h2>
   <button id="enumerate" class="secondary">Enumerate devices</button>
   <button id="perm" class="secondary">Query permission</button>
 </section>
@@ -134,22 +123,6 @@ $('snap').onclick = () => {
   c.hidden = false;
   log(`Captured frame ${c.width}x${c.height}`, 'ok');
 };
-
-// File inputs
-document.querySelectorAll('input[type=file]').forEach((input) => {
-  input.addEventListener('click', () => log(`File input clicked (${input.dataset.name})`));
-  input.addEventListener('change', () => {
-    const f = input.files && input.files[0];
-    if (!f) { log(`No file returned (${input.dataset.name})`, 'err'); return; }
-    log(`File received (${input.dataset.name}): ${f.name || '(no name)'} ${f.type || '(no type)'} ${(f.size / 1024).toFixed(1)} KB`, 'ok');
-    const url = URL.createObjectURL(f);
-    const isVideo = f.type.startsWith('video/');
-    $('filePreview').hidden = isVideo; $('filePreviewVideo').hidden = !isVideo;
-    (isVideo ? $('filePreviewVideo') : $('filePreview')).src = url;
-    input.value = '';
-  });
-  input.addEventListener('cancel', () => log(`File picker cancelled (${input.dataset.name})`));
-});
 
 // Devices & permissions
 $('enumerate').onclick = async () => {
